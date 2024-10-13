@@ -11,7 +11,7 @@ using UserManagement.Services;
 
 namespace RoleManagement.Controllers
 {
-    [Route("api/Role")]
+    [Route("api/RoleModel")]
     [ApiController]
     
     public class RoleController : ControllerBase
@@ -25,7 +25,7 @@ namespace RoleManagement.Controllers
 
         // GET: api/Roles
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Role>>> GetRoles()
+        public async Task<ActionResult<IEnumerable<RoleModel>>> GetRoles()
         {
             return await _context.Roles.ToListAsync();
         }
@@ -38,24 +38,24 @@ namespace RoleManagement.Controllers
 
         // GET: api/Roles/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Role>> GetRole(int id)
+        public async Task<ActionResult<RoleModel>> GetRole(int id)
         {
-            var Role = await _context.Roles.FindAsync(id);
+            var RoleModel = await _context.Roles.FindAsync(id);
 
-            if (Role == null)
+            if (RoleModel == null)
             {
                 return NotFound();
             }
 
-            return Role;
+            return RoleModel;
         }
 
         // PUT: api/Roles/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutRole(Role Role)
+        public async Task<IActionResult> PutRole(RoleModel RoleModel)
         {
-            _context.Entry(Role).State = EntityState.Modified;
+            _context.Entry(RoleModel).State = EntityState.Modified;
 
             try
             {
@@ -63,7 +63,7 @@ namespace RoleManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!RoleExists(Role.RoleId))
+                if (!RoleExists(RoleModel.Id))
                 {
                     return NotFound();
                 }
@@ -79,24 +79,24 @@ namespace RoleManagement.Controllers
         // POST: api/Roles
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Role>> PostRole(Role Role)
+        public async Task<ActionResult<RoleModel>> PostRole(RoleModel RoleModel)
         {
-            _context.Roles.Add(Role);
+            _context.Roles.Add(RoleModel);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetRole", new { id = Role.RoleId }, Role);
+            return CreatedAtAction("GetRole", new { id = RoleModel.Id }, RoleModel);
         }
 
         // DELETE: api/Roles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRole(int id)
         {
-            var Role = await _context.Roles.FindAsync(id);
-            if (Role == null)
+            var RoleModel = await _context.Roles.FindAsync(id);
+            if (RoleModel == null)
             {
                 return NotFound();
             }
 
-            _context.Roles.Remove(Role);
+            _context.Roles.Remove(RoleModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -104,7 +104,7 @@ namespace RoleManagement.Controllers
 
         private bool RoleExists(int id)
         {
-            return _context.Roles.Any(e => e.RoleId == id);
+            return _context.Roles.Any(e => e.Id == id);
         }
     }
 }

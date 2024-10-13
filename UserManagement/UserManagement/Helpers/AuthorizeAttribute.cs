@@ -9,9 +9,9 @@ namespace UserManagement.Helpers
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var user = (User?)context.HttpContext.Items["User"];
+            var UserModel = (UserModel?)context.HttpContext.Items["UserModel"];
 
-            if (user == null)
+            if (UserModel == null)
             {
                 context.Result = new JsonResult(new { message = "Unauthorized" }) { StatusCode = StatusCodes.Status401Unauthorized };
             }

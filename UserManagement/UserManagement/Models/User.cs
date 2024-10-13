@@ -1,23 +1,69 @@
 ﻿using System.Text.Json.Serialization;
 
 using System.Data;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace UserManagement.Models
 {
-    public class User
-    {
-        public int UserId {  get; set; }
-        public string Username { get; set; }
-        public string Email { get; set; }
-        public ICollection<Role> Roles { get; set; }
-        public string Password { get; set; }
-        public bool isActive { get; set; }
+    
+        public class UserModel
+        {
+            [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            public int Id { get; set; }
+
+            [Required]
+            public string Username { get; set; }
+
+            [Required]
+            public string Password { get; set; }
+
+            [Required]
+            public string Email { get; set; }
+            [Required]
+            public ICollection<UserRoleModel> UserRoles { get; set; } = new List<UserRoleModel>();
+            public bool IsActive { get; set; }
     }
-    public class Role
-    {
-        public int RoleId { get; set; }
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public bool isActive { get; set; }
+
+        public class RoleModel
+        {
+            [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            public int Id { get; set; }
+
+            [Required]
+            [MaxLength(100)]
+            public string Name { get; set; }
+
+            [Required]
+            [MaxLength(500)]
+            public string Description { get; set; }
+
+            public ICollection<UserRoleModel> UserRoles { get; set; } = new List<UserRoleModel>();
+            public bool IsActive { get; set; }
     }
+        public class UserRoleModel
+        {
+            public int UserId { get; set; }
+            public UserModel User { get; set; }
+
+            public int RoleId { get; set; }
+            public RoleModel Role { get; set; }
+        }
+        public class UserRequest
+        {
+            [Required]
+            public string Name { get; set; }
+
+            [Required]
+            public string Email { get; set; }
+
+            [Required]
+            public string Password { get; set; }
+            [Required]
+            public ICollection<UserRoleModel> UserRoles { get; set; }
+        }
+
+    
 }

@@ -25,28 +25,28 @@ public class AuthenticationController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] AuthenticateRequest login)
     {
-        var user = await _context.Users.Include(u => u.Roles)
+        var UserModel = await _context.Users.Include(u => u.UserRoles)
             .FirstOrDefaultAsync(u => u.Email == login.Email);
 
-        if (user == null || !EncryptorDecryptor.VerifyPassword( user.Password, login.Password))
+        if (UserModel == null || !EncryptorDecryptor.VerifyPassword( UserModel.Password, login.Password))
         {
             return Unauthorized();
         }
 
-        var token = GenerateJwtToken(user);
-        return Ok(new AuthenticateResponse(user, await token));
+        var token = GenerateJwtToken(UserModel);
+        return Ok(new AuthenticateResponse(UserModel, await token));
     }
 
-    private async Task<string> GenerateJwtToken(User user)
+    private async Task<string> GenerateJwtToken(UserModel UserModel)
     {
         var claims = new List<Claim>
         {
-            new Claim(JwtRegisteredClaimNames.Sid, user.UserId.ToString()),
+            new Claim(JwtRegisteredClaimNames.Sid, UserModel.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-        foreach (var role in user.Roles)
+        foreach (var RoleModel in UserModel.UserRoles)
         {
-            claims.Add(new Claim(ClaimTypes.Role, role.Name));
+            claims.Add(new Claim(ClaimTypes.Role, RoleModel.RoleId.ToString()));
         }
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

@@ -44,13 +44,13 @@ namespace UserManagement.Helpers
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "sid").Value);
 
-                //Attach user to context on successful JWT validation
-                context.Items["User"] = await userService.GetById(userId);
+                //Attach UserModel to context on successful JWT validation
+                context.Items["UserModel"] = await userService.GetById(userId);
             }
             catch
             {
                 //Do nothing if JWT validation fails
-                // user is not attached to context so the request won't have access to secure routes
+                // UserModel is not attached to context so the request won't have access to secure routes
             }
         }    
     }

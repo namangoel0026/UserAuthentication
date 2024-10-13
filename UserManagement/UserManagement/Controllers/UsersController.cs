@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using UserManagement.Models;
 using UserManagement.Helpers;
 using UserManagement.Services;
+using Azure.Core;
 
 namespace UserManagement.Controllers
 {
@@ -25,7 +26,7 @@ namespace UserManagement.Controllers
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
         {
             return await _context.Users.ToListAsync();
         }
@@ -38,24 +39,40 @@ namespace UserManagement.Controllers
 
         // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<UserModel>> GetUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
+            var UserModel = await _context.Users.FindAsync(id);
 
-            if (user == null)
+            if (UserModel == null)
             {
                 return NotFound();
             }
 
-            return user;
+            return UserModel;
         }
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(User user)
+        public async Task<IActionResult> PutUser(int id, [FromBody] UserRequest UserModel)
         {
-            _context.Entry(user).State = EntityState.Modified;
+            foreach (UserRoleModel userRole in UserModel.UserRoles)
+            {
+                bool roleExists = await _context.Roles.AnyAsync(r => r.Id == userRole.RoleId);
+                if (!roleExists)
+                {
+                    throw new Exception("The specified RoleModel does not exist.");
+                }
+            }
+            var userAdd = new UserModel
+            {
+                Username = UserModel.Name,
+                Email = UserModel.Email,
+                UserRoles = (ICollection<UserRoleModel>)UserModel.UserRoles,
+                Password = EncryptorDecryptor.HashPassword(UserModel.Password)
+            };
+
+            _context.Entry(UserModel).State = EntityState.Modified;
 
             try
             {
@@ -63,7 +80,7 @@ namespace UserManagement.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!UserExists(user.UserId))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -79,25 +96,40 @@ namespace UserManagement.Controllers
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        public async Task<ActionResult<UserModel>> PostUser(UserRequest UserModel)
         {
-            user.Password= EncryptorDecryptor.HashPassword(user.Password);
-            _context.Users.Add(user);
+            foreach (UserRoleModel userRole in UserModel.UserRoles)
+            {
+                bool roleExists = await _context.Roles.AnyAsync(r => r.Id == userRole.RoleId);
+                if (!roleExists)
+                {
+                    throw new Exception("The specified RoleModel does not exist.");
+                }
+            }
+            var userAdd = new UserModel
+            {
+                Username = UserModel.Name,
+                Email = UserModel.Email,
+                UserRoles = (ICollection<UserRoleModel>)UserModel.UserRoles,
+                Password = EncryptorDecryptor.HashPassword(UserModel.Password)
+            };
+            
+            _context.Users.Add(userAdd);
             await _context.SaveChangesAsync();
-            return CreatedAtAction("GetUser", new { id = user.UserId }, user);
+            return CreatedAtAction("GetUser", new { id = userAdd.Id }, userAdd);
         }
 
         // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
+            var UserModel = await _context.Users.FindAsync(id);
+            if (UserModel == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(user);
+            _context.Users.Remove(UserModel);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -105,7 +137,7 @@ namespace UserManagement.Controllers
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.UserId == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }

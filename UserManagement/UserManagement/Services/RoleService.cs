@@ -18,37 +18,50 @@ namespace UserManagement.Services
             db = _db;
         }
 
-       public async Task<IEnumerable<Role>> GetAll()
+       public async Task<IEnumerable<RoleModel>> GetAll()
         {
-            return await db.Roles.Where(x => x.isActive == true).ToListAsync();
+            return await db.Roles.Where(x => x.IsActive == true).ToListAsync();
         }
 
-        public async Task<Role?> GetById(int id)
+        public async Task<RoleModel?> GetById(int id)
         {
-            return await db.Roles.FirstOrDefaultAsync(x => x.RoleId == id);
+            return await db.Roles.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<Role?> AddAndUpdateRole(Role RoleObj)
+        public async Task<RoleModel?> AddAndUpdateRole(RoleModel RoleObj)
         {
-            bool isSuccess = false;
-            if (RoleObj.RoleId > 0)
+            try
             {
-                var obj = await db.Roles.FirstOrDefaultAsync(c => c.RoleId == RoleObj.RoleId);
-                if (obj != null)
+                bool isSuccess = false;
+                if (RoleObj.Id > 0)
                 {
-                    // obj.Address = RoleObj.Address;
-                    obj.Name = RoleObj.Name;
-                    db.Roles.Update(obj);
+                    var obj = await db.Roles.FirstOrDefaultAsync(c => c.Id == RoleObj.Id);
+                    if (obj != null)
+                    {
+                        // obj.Address = RoleObj.Address;
+                        obj.Name = RoleObj.Name;
+                        db.Roles.Update(obj);
+                        isSuccess = await db.SaveChangesAsync() > 0;
+                    }
+                }
+                else
+                {
+                    await db.Roles.AddAsync(RoleObj);
                     isSuccess = await db.SaveChangesAsync() > 0;
                 }
-            }
-            else
-            {
-                await db.Roles.AddAsync(RoleObj);
-                isSuccess = await db.SaveChangesAsync() > 0;
-            }
 
-            return isSuccess ? RoleObj : null;
+                return isSuccess ? RoleObj : null;
+            }
+            catch (DbUpdateException ex)
+            {
+                // Handle the exception, log it, or return a UserModel-friendly message.
+                if (ex.InnerException?.Message.Contains("unique constraint") == true)
+                {
+                    throw new Exception("A RoleModel with the same name or description already exists.");
+                }
+
+                throw; 
+            }
         }
     }
 }

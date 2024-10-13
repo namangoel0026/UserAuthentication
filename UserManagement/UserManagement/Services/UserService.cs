@@ -20,22 +20,22 @@ namespace UserManagement.Services
 
        
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<UserModel>> GetAll()
         {
-            return await db.Users.Where(x => x.isActive == true).ToListAsync();
+            return await db.Users.Where(x => x.IsActive == true).ToListAsync();
         }
 
-        public async Task<User?> GetById(int id)
+        public async Task<UserModel?> GetById(int id)
         {
-            return await db.Users.FirstOrDefaultAsync(x => x.UserId == id);
+            return await db.Users.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task<User?> AddAndUpdateUser(User userObj)
+        public async Task<UserModel?> AddAndUpdateUser(UserModel userObj)
         {
             bool isSuccess = false;
-            if (userObj.UserId > 0)
+            if (userObj.Id > 0)
             {
-                var obj = await db.Users.FirstOrDefaultAsync(c => c.UserId == userObj.UserId);
+                var obj = await db.Users.FirstOrDefaultAsync(c => c.Id == userObj.Id);
                 if (obj != null)
                 {
                     // obj.Address = userObj.Address;

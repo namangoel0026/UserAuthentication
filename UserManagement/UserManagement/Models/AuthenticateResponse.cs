@@ -8,11 +8,11 @@
         public string Token { get; set; }
 
 
-        public AuthenticateResponse(User user, string token)
+        public AuthenticateResponse(UserModel UserModel, string token)
         {
-            UserId = user.UserId;
-            Username = user.Username;
-            Email = user.Email;
+            UserId = UserModel.Id;
+            Username = UserModel.Username;
+            Email = UserModel.Email;
             Token = token;
         }
     }

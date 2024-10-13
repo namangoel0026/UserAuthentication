@@ -4,8 +4,8 @@ namespace UserManagement.Services
 {
     public interface IRoleService
     {
-        Task<IEnumerable<Role>> GetAll();
-        Task<Role?> GetById(int id);
-        Task<Role?> AddAndUpdateRole(Role RoleObj);
+        Task<IEnumerable<RoleModel>> GetAll();
+        Task<RoleModel?> GetById(int id);
+        Task<RoleModel?> AddAndUpdateRole(RoleModel RoleObj);
     }
 }

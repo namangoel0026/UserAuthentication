@@ -4,8 +4,8 @@ namespace UserManagement.Services
 {
     public interface IUserService
     {
-        Task<IEnumerable<User>> GetAll();
-        Task<User?> GetById(int id);
-        Task<User?> AddAndUpdateUser(User userObj);
+        Task<IEnumerable<UserModel>> GetAll();
+        Task<UserModel?> GetById(int id);
+        Task<UserModel?> AddAndUpdateUser(UserModel userObj);
     }
 }
