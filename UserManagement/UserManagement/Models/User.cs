@@ -22,7 +22,7 @@ namespace UserManagement.Models
             [Required]
             public string Email { get; set; }
             [Required]
-            public ICollection<UserRoleModel> UserRoles { get; set; } = new List<UserRoleModel>();
+            public string UserRoles { get; set; } 
             public bool IsActive { get; set; }
     }
 
@@ -38,9 +38,7 @@ namespace UserManagement.Models
 
             [Required]
             [MaxLength(500)]
-            public string Description { get; set; }
-
-            public ICollection<UserRoleModel> UserRoles { get; set; } = new List<UserRoleModel>();
+            public string Description { get; set; }          
             public bool IsActive { get; set; }
     }
         public class UserRoleModel
@@ -54,15 +52,15 @@ namespace UserManagement.Models
         public class UserRequest
         {
             [Required]
-            public string Name { get; set; }
+            public int Id {  get; set; }
+            [Required]
+            public string Username { get; set; }
 
             [Required]
             public string Email { get; set; }
 
             [Required]
-            public string Password { get; set; }
-            [Required]
-            public ICollection<UserRoleModel> UserRoles { get; set; }
+            public string UserRoles { get; set; }
         }
 
     

@@ -15,18 +15,19 @@ public class AuthenticationController : ControllerBase
 {
     private readonly UserContext _context;
     private readonly IConfiguration _configuration;
+    private readonly IUserService _userService;
 
-    public AuthenticationController(UserContext context, IConfiguration configuration)
+    public AuthenticationController(UserContext context, IConfiguration configuration, IUserService userService)
     {
         _context = context;
         _configuration = configuration;
+        _userService = userService;
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] AuthenticateRequest login)
     {
-        var UserModel = await _context.Users.Include(u => u.UserRoles)
-            .FirstOrDefaultAsync(u => u.Email == login.Email);
+        var UserModel = await _userService.Login(login.Email);
 
         if (UserModel == null || !EncryptorDecryptor.VerifyPassword( UserModel.Password, login.Password))
         {
@@ -44,9 +45,9 @@ public class AuthenticationController : ControllerBase
             new Claim(JwtRegisteredClaimNames.Sid, UserModel.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
-        foreach (var RoleModel in UserModel.UserRoles)
+        foreach (string Role in UserModel.UserRoles.Split(','))
         {
-            claims.Add(new Claim(ClaimTypes.Role, RoleModel.RoleId.ToString()));
+            claims.Add(new Claim(ClaimTypes.Role, Role));
         }
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

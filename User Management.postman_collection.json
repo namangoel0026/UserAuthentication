@@ -1,0 +1,355 @@
+{
+	"info": {
+		"_postman_id": "99470314-7350-429f-96f0-84fcce31fd5b",
+		"name": "User Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20703632"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Create user",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"test101\",\r\n    \"email\": \"Test101@abc.com\",\r\n    \"userroles\": \"2,3\",\r\n    \"password\": \"Test1234\",\r\n    \"isActive\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7030/api/User",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"User"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Users",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiZGJjYjVlZWQtZmVkZS00MGMwLTg2ZDAtMjc3OTg5MzZkZWNjIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NDk1NzYsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.oHllKBuh-VMjHN6bIjf4JRRKRIU9M_ROZr1guTxM4qI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7030/api/User",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"User"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiZGJjYjVlZWQtZmVkZS00MGMwLTg2ZDAtMjc3OTg5MzZkZWNjIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NDk1NzYsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.oHllKBuh-VMjHN6bIjf4JRRKRIU9M_ROZr1guTxM4qI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7030/api/User/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"User",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":\"3\",\r\n  \"username\": \"test102\",\r\n  \"email\": \"Test102@abc.com\",\r\n  \"userroles\": \"1,2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7030/api/User",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"User"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7030/api/User/3",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"User",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Roles",
+			"item": [
+				{
+					"name": "Read Roles",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7030/api/Role",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"Role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Role",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"Test Role 3\",\r\n  \"description\": \"Test Role 3\",\r\n  \"isActive\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7030/api/Role",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"Role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read Role",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7030/api/Role/1",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"Role",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Role",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Id\": 4,\r\n  \"name\": \"Test Role 4\",\r\n  \"description\": \"Test Role 4\",\r\n  \"isActive\": true\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7030/api/Role",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"Role"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Role",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzaWQiOiIyIiwianRpIjoiMDg3YzNjYjAtMWZmNC00YzFkLTkzZGMtN2JkODFiZDczNTNkIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjpbIjEiLCIgMiJdLCJleHAiOjE3Mjg4NTE1NDgsImlzcyI6IlVzZXJNYW5hZ2VtZW50IiwiYXVkIjoiVXNlck1vZGVsIn0.32cyjcQvqWQ6rRvDC_5XBR_KGcZKelzU6eigzaCBdPE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:7030/api/Role/4",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"Role",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"admin@example.com\",\r\n  \"password\": \"Admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:7030/api/Authentication/login",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "7030",
+							"path": [
+								"api",
+								"Authentication",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -36,16 +36,6 @@ namespace UserManagement.Models
             .IsUnique();
             modelBuilder.Entity<UserRoleModel>()
             .HasKey(ur => new { ur.UserId, ur.RoleId });
-
-            modelBuilder.Entity<UserRoleModel>()
-                .HasOne(ur => ur.User)
-                .WithMany(u => u.UserRoles)
-                .HasForeignKey(ur => ur.UserId);
-
-            modelBuilder.Entity<UserRoleModel>()
-                .HasOne(ur => ur.Role)
-                .WithMany(r => r.UserRoles)
-                .HasForeignKey(ur => ur.RoleId);
         }
     }
 

@@ -1,7 +1,12 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Configuration;
+using System.Data;
+using System.Globalization;
 using System.Text;
 using UserManagement.Helpers;
 using UserManagement.Models;
@@ -17,12 +22,18 @@ builder.Services.AddDbContext<UserContext>(opt =>
 opt.UseSqlServer(connectionString));
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllers()
+    .AddDataAnnotationsLocalization()
+    .AddViewLocalization();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 });
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<IDbConnection>(sp => new SqlConnection(builder.Configuration.GetConnectionString("ConnectionString")));
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,6 +53,18 @@ builder.Services.AddAuthentication(options =>
 });
 
 var app = builder.Build();
+var supportedCultures = new[]
+        {
+            new CultureInfo("en-US"),
+            new CultureInfo("hi-IN") // Hindi
+        };
+
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("en-US"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

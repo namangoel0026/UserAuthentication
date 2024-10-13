@@ -8,103 +8,62 @@ using Microsoft.EntityFrameworkCore;
 using UserManagement.Models;
 using UserManagement.Helpers;
 using UserManagement.Services;
+using UserManagement.DTO;
+using Microsoft.Extensions.Localization;
+using UserManagement.Controllers;
+using System.Data;
 
 namespace RoleManagement.Controllers
 {
-    [Route("api/RoleModel")]
+    [Route("api/Role")]
     [ApiController]
-    
+    [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly UserContext _context;
+        private readonly IRoleService _roleService;
+        private readonly IStringLocalizer<RoleController> _localizer;
 
-        public RoleController(UserContext context)
+        public RoleController(UserContext context, IRoleService roleService, IStringLocalizer<RoleController> localizer)
         {
             _context = context;
+            _roleService = roleService;
+            _localizer = localizer;
         }
 
-        // GET: api/Roles
         [HttpGet]
         public async Task<ActionResult<IEnumerable<RoleModel>>> GetRoles()
         {
-            return await _context.Roles.ToListAsync();
+            return Ok(await _roleService.GetAll());
         }
-        // GET: api/Roles/Authenticate
-        //[HttpGet]
-        //public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest request)
-        //{
-        //    return await Authenticate(request);
-        //}
-
-        // GET: api/Roles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<RoleModel>> GetRole(int id)
         {
-            var RoleModel = await _context.Roles.FindAsync(id);
-
-            if (RoleModel == null)
-            {
-                return NotFound();
-            }
-
-            return RoleModel;
+            return Ok(await _roleService.GetById(id));
         }
 
-        // PUT: api/Roles/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> PutRole(RoleModel RoleModel)
         {
-            _context.Entry(RoleModel).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!RoleExists(RoleModel.Id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var role=await _roleService.UpdateRoleAsync(RoleModel);
+            var response = new ApiResponse<RoleModel>(_localizer["RoleUpdated"], (RoleModel)role);
+            return Ok(response);
         }
 
-        // POST: api/Roles
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<RoleModel>> PostRole(RoleModel RoleModel)
         {
-            _context.Roles.Add(RoleModel);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetRole", new { id = RoleModel.Id }, RoleModel);
+            var role = await _roleService.CreateRoleAsync(RoleModel);
+            var response = new ApiResponse<RoleModel>(_localizer["RoleCreated"], (RoleModel)role);
+            return Ok(response);
         }
-
-        // DELETE: api/Roles/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRole(int id)
         {
-            var RoleModel = await _context.Roles.FindAsync(id);
-            if (RoleModel == null)
-            {
-                return NotFound();
-            }
+            var role=await _roleService.DeleteRoleAsync(id);
+            var response = new ApiResponse<bool>(_localizer["RoleDeleted"], (bool)role);
+            return Ok(response);
 
-            _context.Roles.Remove(RoleModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool RoleExists(int id)
-        {
-            return _context.Roles.Any(e => e.Id == id);
         }
     }
 }

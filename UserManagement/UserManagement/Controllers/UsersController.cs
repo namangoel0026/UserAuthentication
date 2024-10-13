@@ -9,6 +9,9 @@ using UserManagement.Models;
 using UserManagement.Helpers;
 using UserManagement.Services;
 using Azure.Core;
+using UserManagement.DTO;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace UserManagement.Controllers
 {
@@ -18,126 +21,56 @@ namespace UserManagement.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserContext _context;
-
-        public UsersController(UserContext context)
+        private readonly IUserService _userService;
+        private readonly IStringLocalizer<UsersController> _localizer;
+        public UsersController(UserContext context, IUserService userService, IStringLocalizer<UsersController> localizer)
         {
             _context = context;
+            _userService = userService;
+            _localizer = localizer;
         }
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserModel>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDTO>>> GetUsers()
         {
-            return await _context.Users.ToListAsync();
+            return Ok(await _userService.GetAll());
         }
-        // GET: api/Users/Authenticate
-        //[HttpGet]
-        //public async Task<ActionResult<AuthenticateResponse>> Authenticate(AuthenticateRequest request)
-        //{
-        //    return await Authenticate(request);
-        //}
-
-        // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserModel>> GetUser(int id)
+        public async Task<ActionResult<UserDTO>> GetUser(int id)
         {
-            var UserModel = await _context.Users.FindAsync(id);
+            var user = await _userService.GetById(id);
 
-            if (UserModel == null)
+            if (user == null)
             {
                 return NotFound();
             }
-
-            return UserModel;
+            return Ok(user);
         }
 
-        // PUT: api/Users/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutUser(int id, [FromBody] UserRequest UserModel)
+        [HttpPut]
+        public async Task<IActionResult> PutUser(UserRequest UserModel)
         {
-            foreach (UserRoleModel userRole in UserModel.UserRoles)
-            {
-                bool roleExists = await _context.Roles.AnyAsync(r => r.Id == userRole.RoleId);
-                if (!roleExists)
-                {
-                    throw new Exception("The specified RoleModel does not exist.");
-                }
-            }
-            var userAdd = new UserModel
-            {
-                Username = UserModel.Name,
-                Email = UserModel.Email,
-                UserRoles = (ICollection<UserRoleModel>)UserModel.UserRoles,
-                Password = EncryptorDecryptor.HashPassword(UserModel.Password)
-            };
-
-            _context.Entry(UserModel).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!UserExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            var user = await _userService.UpdateUserAsync(UserModel);
+            var response = new ApiResponse<UserDTO>(_localizer["UserUpdated"], (UserDTO)user);
+            return Ok(response );
         }
 
-        // POST: api/Users
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<UserModel>> PostUser(UserRequest UserModel)
+        public async Task<ActionResult<UserDTO>> PostUser([FromBody] UserModel UserModel)
         {
-            foreach (UserRoleModel userRole in UserModel.UserRoles)
-            {
-                bool roleExists = await _context.Roles.AnyAsync(r => r.Id == userRole.RoleId);
-                if (!roleExists)
-                {
-                    throw new Exception("The specified RoleModel does not exist.");
-                }
-            }
-            var userAdd = new UserModel
-            {
-                Username = UserModel.Name,
-                Email = UserModel.Email,
-                UserRoles = (ICollection<UserRoleModel>)UserModel.UserRoles,
-                Password = EncryptorDecryptor.HashPassword(UserModel.Password)
-            };
-            
-            _context.Users.Add(userAdd);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetUser", new { id = userAdd.Id }, userAdd);
+            var saveduser = await _userService.CreateUserWithRolesAsync(UserModel);
+            var message = _localizer.GetString("UserCreated");
+            var response = new ApiResponse<UserDTO>(_localizer["UserCreated"], (UserDTO)saveduser);
+            return Ok(response);
         }
 
-        // DELETE: api/Users/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
-            var UserModel = await _context.Users.FindAsync(id);
-            if (UserModel == null)
-            {
-                return NotFound();
-            }
-
-            _context.Users.Remove(UserModel);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        private bool UserExists(int id)
-        {
-            return _context.Users.Any(e => e.Id == id);
+            var deleteduser = await _userService.DeleteUserAsync(id);
+            var response = new ApiResponse<bool>(_localizer["UserDeleted"], (bool)deleteduser);
+            return Ok(response);
         }
     }
 }

@@ -6,6 +6,8 @@ namespace UserManagement.Services
     {
         Task<IEnumerable<RoleModel>> GetAll();
         Task<RoleModel?> GetById(int id);
-        Task<RoleModel?> AddAndUpdateRole(RoleModel RoleObj);
+        Task<RoleModel> CreateRoleAsync(RoleModel role);
+        Task<RoleModel> UpdateRoleAsync(RoleModel role);
+        Task<bool> DeleteRoleAsync(int roleid);
     }
 }

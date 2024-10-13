@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using UserManagement.Models;
+using UserManagement.DTO;
 
 namespace UserManagement.Helpers
 {
@@ -9,7 +10,7 @@ namespace UserManagement.Helpers
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var UserModel = (UserModel?)context.HttpContext.Items["UserModel"];
+            var UserModel = (UserDTO)context.HttpContext.Items["UserModel"];
 
             if (UserModel == null)
             {
